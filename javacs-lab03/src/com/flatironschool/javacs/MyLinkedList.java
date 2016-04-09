@@ -85,7 +85,38 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public void add(int index, E element) {
-		// TODO: fill this in
+		// inserts specified element at specified position in list
+		//shifts element currently at position and any subsequent eles to the right
+		//(+1 to their indices)
+		//[0]->[1]->[2] : [0]->[3]->[1]->[2]
+		//[0]->[1]->[2] : [3]->[0]->[2]->[2]
+		//if we get to end of list and still haven't reached index, throw indexoutofbounds
+		Node node = head;
+		if(index == 0){
+			Node shiftDown = node;
+			Node add = new Node(element, shiftDown);
+			head = add;
+			size++;
+		}
+
+		else{
+			for(int counter = 0; counter <= index; counter++){
+				if(counter == index - 1){
+					Node shiftDown = node.next;
+					Node add = new Node(element, shiftDown);
+					node.next = add;
+					size++;
+				}
+				else{
+					if(node.next == null){
+						throw new IndexOutOfBoundsException();
+					}
+					else{
+						node = node.next;
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -146,7 +177,22 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public int indexOf(Object target) {
+		//returns index of first occurence of target. otherwise, returns -1
 		// TODO: fill this in
+		/*int counter = 0;
+		for (Node node = head; node.next != null; node = node.next) {
+			if(node.cargo.equals(target)){
+				return counter;
+			}
+			counter = counter + 1;
+		}*/
+		Node node = head;
+		for(int counter = 0; counter < this.size; counter++){
+			if(equals(node.cargo, target)){
+				return counter;
+			}
+			node = node.next;
+		}
 		return -1;
 	}
 
@@ -201,7 +247,30 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public boolean remove(Object obj) {
-		// TODO: fill this in
+		//Removes the first occurrence of the specified element from this list, 
+		//if it is present (optional operation). If this list does not contain the element, it is unchanged. More formally, removes the element with the lowest index i
+		//[0]->[1]->[2]
+		Node node = head;
+		Node before = head;
+		for(int counter = 0; counter < size; counter++){
+			if(equals(node.cargo, obj)){
+				size--;
+				if(counter == 0){
+					head = node.next;
+					node.next = null;
+					node.cargo = null;
+					return true;
+				}
+				else{
+					before.next = node.next;
+					node.cargo = null;
+					node.next = null;
+					return true;
+				}
+			}
+			before = node;
+			node = node.next;
+		}
 		return false;
 	}
 
